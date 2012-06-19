@@ -14,7 +14,7 @@ Outputs
 
 1. Copy Twig folder into your Bundle
 
-2. Activate twig extensions and set up our new sextension at `/app/config/config.yml` (replace acme by your bundle name)
+2. Activate twig extensions and set up our new extension at `/app/config/config.yml` (replace acme by your bundle name)
 
 These lines must go below `services:`
 	
@@ -57,3 +57,4 @@ This is a translation to spanish:
 	about %hours hours ago: hace %hours horas
 	1 day ago: hace 1 día
 	%days days ago: hace %days días
+
