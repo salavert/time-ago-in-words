@@ -1,6 +1,6 @@
 # Time ago in words Twig extension
 
-This is a Twig extension for Symfony2 Framework where you can easily conrvert a datetime/timestamp to a distance of time in words
+This is a Twig extension for Symfony2 Framework where you can easily convert a datetime/timestamp to a distance of time in words.
 
 By example
 
@@ -14,7 +14,7 @@ Outputs
 
 1. Copy Twig folder into your Bundle
 
-2. Activate twig extensions and set up our new extension at `/app/config/config.yml` (replace acme by your bundle name)
+2. Activate twig extensions and set up our new extension at `/app/config/config.yml` (replace acme with your bundle name)
 
 These lines must go below `services:`
 	
@@ -41,7 +41,7 @@ To display distance of time between two custom dates you should use
 
 	{{ message.created|distance_of_time_in_words(message.updated) }}
 
-# Tanslations
+# Translations
 
 Add the following translations to your `\app\Resources\messages.locale.yml`
 
