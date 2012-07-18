@@ -41,7 +41,7 @@ To display distance of time between two custom dates you should use
 
 	{{ message.created|distance_of_time_in_words(message.updated) }}
 
-# Tanslations
+# Translations
 
 Add the following translations to your `\app\Resources\messages.locale.yml`
 
