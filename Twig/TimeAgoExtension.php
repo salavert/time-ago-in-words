@@ -1,6 +1,6 @@
 <?php
 
-namespace SalerAssessors\SecurityBundle\Twig;
+namespace ACME\DemoBundle\Twig;
 
 use Twig_Extension;
 use Twig_Filter_Method;
