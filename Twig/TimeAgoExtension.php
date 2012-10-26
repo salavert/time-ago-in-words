@@ -68,15 +68,23 @@ class TimeAgoExtension extends \Twig_Extension
         $datetime_transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d H:i:s');
         $timestamp_transformer = new DateTimeToTimestampTransformer();
 
-        # Transforming to DateTime
-        $from_time = (!($from_time instanceof \DateTime)) ? $datetime_transformer->reverseTransform($from_time) : $from_time;
+        # Transforming to Timestamp
+        if (!($from_time instanceof \DateTime) && !is_numeric($from_time)) {
+            $from_time = $datetime_transformer->reverseTransform($from_time);
+            $from_time = $timestamp_transformer->transform($from_time);
+        } elseif($from_time instanceof \DateTime) {
+            $from_time = $timestamp_transformer->transform($from_time);
+        }
 
         $to_time = empty($to_time) ? new \DateTime('now') : $to_time;
-        $to_time = (!($to_time instanceof \DateTime)) ? $datetime_transformer->reverseTransform($to_time) : $to_time;
 
         # Transforming to Timestamp
-        $from_time = $timestamp_transformer->transform($from_time);
-        $to_time = $timestamp_transformer->transform($to_time);
+        if (!($to_time instanceof \DateTime) && !is_numeric($to_time)) {
+            $to_time = $datetime_transformer->reverseTransform($to_time);
+            $to_time = $timestamp_transformer->transform($to_time);
+        } elseif($to_time instanceof \DateTime) {
+            $to_time = $timestamp_transformer->transform($to_time);
+        }
 
         $distance_in_minutes = round((abs($to_time - $from_time))/60);
         $distance_in_seconds = round(abs($to_time - $from_time));
