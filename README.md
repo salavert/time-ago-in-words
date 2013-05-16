@@ -18,6 +18,7 @@ Outputs
 
 These lines must go below `services:`
 	
+		# Change "acmebundle" and "Acme\AcmeBundle" to your bundle name
 		acmebundle.twig.timeago_extension:
 			class: Acme\AcmeBundle\Twig\TimeAgoExtension
 			arguments: [@translator]
@@ -43,7 +44,7 @@ To display distance of time between two custom dates you should use
 
 # Translations
 
-Add the following translations to your `\app\Resources\messages.locale.yml`
+Add the following translations to your `\app\Resources\translations\messages.locale.yml`
 
 This is a translation to spanish:
 
