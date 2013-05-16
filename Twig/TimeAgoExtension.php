@@ -1,14 +1,12 @@
 <?php
 
-namespace ACME\DemoBundle\Twig;
+// TODO: Change this to your bundle name !
+namespace Acme\AcmeBundle\Twig;
 
 use Twig_Extension;
 use Twig_Filter_Method;
-use Twig_Function_Method;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class TimeAgoExtension extends \Twig_Extension
 {
@@ -17,9 +15,9 @@ class TimeAgoExtension extends \Twig_Extension
     /**
      * Constructor method
      *
-     * @param TranslatorInterface $translator
+     * @param IdentityTranslator $translator
      */
-    public function __construct(Translator  $translator)
+    public function __construct($translator)
     {
         $this->translator = $translator;
     }
@@ -27,8 +25,8 @@ class TimeAgoExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'distance_of_time_in_words'  => new Twig_Filter_Method($this, 'distanceOfTimeInWordsFilter'),
-            'time_ago_in_words'          => new Twig_Filter_Method($this, 'timeAgoInWordsFilter')
+            'distance_of_time_in_words' => new Twig_Filter_Method($this, 'distanceOfTimeInWordsFilter'),
+            'time_ago_in_words' => new Twig_Filter_Method($this, 'timeAgoInWordsFilter')
         );
     }
 
