@@ -17,14 +17,14 @@ Outputs
 ```
 {
 	"require": {
-		"salavert/time-ago-in-words": "dev-master"
+		"salavert/time-ago-in-words": "1.*"
 	}
 }
 ```
 
 or use composer's require command:
 
-	composer require salavert/time-ago-in-words:dev-master
+	composer require salavert/time-ago-in-words:1.*
 
 2) Register an Extension as a Service
 
