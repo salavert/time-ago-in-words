@@ -12,7 +12,7 @@ Outputs
 
 # Installation for Symfony2
 
-1. Update your composer.json
+1) Update your composer.json
 
 ```
 {
@@ -26,7 +26,7 @@ or use composer's require command:
 
 	composer require salavert/time-ago-in-words:1.*
 
-2. Register an Extension as a Service
+2) Register an Extension as a Service
 
 Now you must let the Service Container know about your newly created Twig Extension:
 
