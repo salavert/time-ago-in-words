@@ -12,24 +12,37 @@ Outputs
 
 # Installation for Symfony2
 
-1. Copy Twig folder into your Bundle
+1. Update your composer.json
 
-2. Activate twig extensions and set up our new extension at `/app/config/config.yml` (replace acme with your bundle name)
-
-These lines must go below `services:`
+	{
+		"require": {
+			"salavert/time-ago-in-words": "1.*"
+		}
+	}
 	
-		# Change "acmebundle" and "Acme\AcmeBundle" to your bundle name
-		acmebundle.twig.timeago_extension:
-			class: Acme\AcmeBundle\Twig\TimeAgoExtension
+or use composer's require command:
+
+	composer require salavert/time-ago-in-words:1.*
+
+2. Register an Extension as a Service
+
+Now you must let the Service Container know about your newly created Twig Extension:
+
+# app/config/config.yml
+YAML:
+	services:
+		salavert.twig.time_ago:
+			class: Salavert\Twig\Extension\TimeAgoExtension
 			arguments: [@translator]
-			tags:
-			-  { name: twig.extension }
-			
-		twig.extension.text:
-			class: Twig_Extensions_Extension_Text
 			tags:
 			- { name: twig.extension }
 
+# or into your bundle src\Acme\AcmeBundle\Resources\config\services.xml
+XML:
+	<service id="salavert.twig.time_ago" class="Salavert\Twig\Extension\TimeAgoExtension">
+		<tag name="twig.extension" />
+		<argument type="service" id="translator" />
+        </service>
 
 # Usage
 

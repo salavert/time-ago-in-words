@@ -1,12 +1,6 @@
 <?php
 
-// TODO: Change this to your bundle name !
-namespace Acme\AcmeBundle\Twig;
-
-use Twig_Extension;
-use Twig_Filter_Method;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer;
+namespace Salavert\Twig\Extension;
 
 class TimeAgoExtension extends \Twig_Extension
 {
@@ -25,8 +19,8 @@ class TimeAgoExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'distance_of_time_in_words' => new Twig_Filter_Method($this, 'distanceOfTimeInWordsFilter'),
-            'time_ago_in_words' => new Twig_Filter_Method($this, 'timeAgoInWordsFilter')
+            new \Twig_SimpleFilter('distance_of_time_in_words', array($this, 'distanceOfTimeInWordsFilter')),
+            new \Twig_SimpleFilter('time_ago_in_words', array($this, 'timeAgoInWordsFilter')),
         );
     }
 
@@ -63,8 +57,8 @@ class TimeAgoExtension extends \Twig_Extension
      */
     public function distanceOfTimeInWordsFilter($from_time, $to_time = null, $include_seconds = false)
     {
-        $datetime_transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d H:i:s');
-        $timestamp_transformer = new DateTimeToTimestampTransformer();
+        $datetime_transformer = new \Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer(null, null, 'Y-m-d H:i:s');
+        $timestamp_transformer = new \Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer();
 
         # Transforming to Timestamp
         if (!($from_time instanceof \DateTime) && !is_numeric($from_time)) {
@@ -134,7 +128,7 @@ class TimeAgoExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'time_ago';
+        return 'time_ago_extension';
     }
 
 
