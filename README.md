@@ -14,12 +14,14 @@ Outputs
 
 1. Update your composer.json
 
-	{
-		"require": {
-			"salavert/time-ago-in-words": "1.*"
-		}
+```
+{
+	"require": {
+		"salavert/time-ago-in-words": "1.*"
 	}
-	
+}
+```
+
 or use composer's require command:
 
 	composer require salavert/time-ago-in-words:1.*
@@ -28,21 +30,27 @@ or use composer's require command:
 
 Now you must let the Service Container know about your newly created Twig Extension:
 
-# app/config/config.yml
 YAML:
-	services:
-		salavert.twig.time_ago:
-			class: Salavert\Twig\Extension\TimeAgoExtension
-			arguments: [@translator]
-			tags:
-			- { name: twig.extension }
 
-# or into your bundle src\Acme\AcmeBundle\Resources\config\services.xml
+```
+# app/config/config.yml
+services:
+	salavert.twig.time_ago:
+		class: Salavert\Twig\Extension\TimeAgoExtension
+		arguments: [@translator]
+		tags:
+		- { name: twig.extension }
+```
+
 XML:
-	<service id="salavert.twig.time_ago" class="Salavert\Twig\Extension\TimeAgoExtension">
-		<tag name="twig.extension" />
-		<argument type="service" id="translator" />
-        </service>
+
+```
+# or into your bundle src\Acme\AcmeBundle\Resources\config\services.xml
+<service id="salavert.twig.time_ago" class="Salavert\Twig\Extension\TimeAgoExtension">
+	<tag name="twig.extension" />
+	<argument type="service" id="translator" />
+</service>
+```
 
 # Usage
 
