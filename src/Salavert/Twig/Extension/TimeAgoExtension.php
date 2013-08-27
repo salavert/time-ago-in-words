@@ -29,12 +29,13 @@ class TimeAgoExtension extends \Twig_Extension
      *
      * @param $from_time String or DateTime
      * @param bool $include_seconds
+     * @param bool $include_months
      *
      * @return mixed
      */
-    function timeAgoInWordsFilter($from_time, $include_seconds = false)
+    function timeAgoInWordsFilter($from_time, $include_seconds = false, $include_months = false)
     {
-        return $this->distanceOfTimeInWordsFilter($from_time, new \DateTime('now'), $include_seconds);
+        return $this->distanceOfTimeInWordsFilter($from_time, new \DateTime('now'), $include_seconds, $include_months);
     }
 
     /**
@@ -48,14 +49,16 @@ class TimeAgoExtension extends \Twig_Extension
      * {{ user.createdAt|distance_of_time_in_words(user.lastLoginAt) }} returns "less than a minute".
      *
      * Set include_seconds to true if you want more detailed approximations if distance < 1 minute
+     * Set include_months to true if you want approximations in months if days > 30
      *
      * @param $from_time String or DateTime
      * @param $to_time String or DateTime
      * @param bool $include_seconds
+     * @param bool $include_months
      *
      * @return mixed
      */
-    public function distanceOfTimeInWordsFilter($from_time, $to_time = null, $include_seconds = false)
+    public function distanceOfTimeInWordsFilter($from_time, $to_time = null, $include_seconds = false, $include_months = false)
     {
         $datetime_transformer = new \Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer(null, null, 'Y-m-d H:i:s');
         $timestamp_transformer = new \Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer();
@@ -117,7 +120,13 @@ class TimeAgoExtension extends \Twig_Extension
             return $this->translator->trans('1 day ago');
         }
         else{
-            return $this->translator->trans('%days days ago', array('%days' => round($distance_in_minutes/1440)));
+            $distance_in_days = round($distance_in_minutes/1440);
+            if (!$include_months || $distance_in_days <= 30) {
+                return $this->translator->trans('%days days ago', array('%days' => round($distance_in_days)));
+            }
+            else {
+                return $this->translator->transchoice('{1} 1 month ago |]1,Inf[ %months months ago', round($distance_in_days/30), array('%months' => round($distance_in_days/30)));
+            }
         }
     }
 

@@ -57,11 +57,19 @@ XML:
 To display distance of time in words between a date and current date:
 
 	{{ message.created|time_ago_in_words }}
-	
 
 To display distance of time between two custom dates you should use 
 
 	{{ message.created|distance_of_time_in_words(message.updated) }}
+
+You also have to availbale options, for both time_ago_in_words & distance_of_time_in_words
+	
+- include_seconds (boolean) if you want more detailed approximations if time is less than a minute
+- include_months (boolean) if you want days to be approximated in months. It starts at 31 days.
+
+Thus, if you want to have the month approximation but not the seconds approximation, you should use:
+
+	{{ message.created|time_ago_in_words(false, true) }}
 
 # Translations
 
