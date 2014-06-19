@@ -89,3 +89,15 @@ This is a translation to spanish:
 	%days days ago: hace %days días
 	"{1} 1 month ago |]1,Inf[ %months months ago": 
 
+In the same case, for future:
+
+    # Time ago in words - Twig Extension
+    in less than %seconds seconds: en menos de %seconds segundos
+    in half a minute: en medio minuto
+    in less than a minute: en menos de un minuto
+    in 1 minute: en 1 minuto
+    in %minutes minutes: en %minutes minutos
+    in about 1 hour: dentro de casi 1 hora
+    in about %hours hours: en %hours horas
+    in 1 day: en 1 día
+    in %days days: en %days días
