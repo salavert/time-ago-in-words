@@ -24,7 +24,7 @@ Outputs
 
 or use composer's require command:
 
-	composer require salavert/time-ago-in-words:1.*
+	composer require "salavert/time-ago-in-words": "1.*"
 
 2) Register an Extension as a Service
 
