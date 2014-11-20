@@ -17,7 +17,7 @@ Outputs
 ```
 {
 	"require": {
-		"salavert/time-ago-in-words": "1.*"
+		"salavert/time-ago-in-words:1.*"
 	}
 }
 ```
