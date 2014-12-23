@@ -1,7 +1,7 @@
 {
     "name": "salavert/time-ago-in-words",
     "description": "Twig extension where you can easily convert a datetime or timestamp to a distance of time in words.",
-    "keywords": ["twig", "time ago", "distance of time", "time ago in words"],
+    "keywords": ["twig", "time", "time ago", "distance of time", "time ago in words"],
     "homepage": "http://github.com/salavert/time-ago-in-words",
     "license": "MIT",
     "require": {
@@ -10,6 +10,11 @@
     },
     "autoload": {
         "psr-0": { "Salavert": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
     },
     "authors": [
         {
