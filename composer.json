@@ -1,12 +1,20 @@
 {
     "name": "salavert/time-ago-in-words",
-    "description": "Twig extension where you can easily convert a datetime or timestamp to a distance of time in words.",
-    "keywords": ["twig", "time", "time ago", "distance of time", "time ago in words"],
+    "description": "Time ago Twig extension where you can easily convert a datetime or timestamp to a distance of time in words.",
+    "keywords": ["time", "twig", "time ago", "distance of time", "time ago in words"],
     "homepage": "http://github.com/salavert/time-ago-in-words",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Jose Salavert",
+            "email": "salavert@gmail.com",
+	        "homepage": "http://www.josesalavert.com"
+        }
+    ],
     "require": {
-	"php": ">=5.3.0",
-        "twig/twig": "~1.12"
+		"php": ">=5.3.0",
+        "twig/twig": "~1.12",
+		"phpunit/phpunit": "4.2.6"
     },
     "autoload": {
         "psr-0": { "Salavert": "src/" }
@@ -15,12 +23,5 @@
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
-    },
-    "authors": [
-        {
-            "name": "Jose Salavert",
-            "email": "salavert@gmail.com",
-	    "homepage": "http://www.salavert.org"
-        }
-    ]
+    }
 }

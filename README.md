@@ -14,11 +14,9 @@ Outputs
 
 1) Update your composer.json
 
-```
-{
-	"require": {
-		"salavert/time-ago-in-words:1.*"
-	}
+```json
+"require": {
+	"salavert/time-ago-in-words:1.*"
 }
 ```
 
@@ -101,3 +99,9 @@ In the same case, for future:
     in about %hours hours: en %hours horas
     in 1 day: en 1 día
     in %days days: en %days días
+	
+# Testing
+
+To launch all tests first make sure dependecies are met with composer and run:
+
+	./vendor/bin/phpunit
