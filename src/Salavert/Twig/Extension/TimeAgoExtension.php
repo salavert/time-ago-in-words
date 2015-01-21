@@ -78,14 +78,14 @@ class TimeAgoExtension extends \Twig_Extension
             $to_time = $timestamp_transformer->transform($to_time);
         }
 
-	$future = ($to_time < $from_time) ? true : false;
+        $future = ($to_time < $from_time) ? true : false;
 
         $distance_in_minutes = round((abs($to_time - $from_time))/60);
         $distance_in_seconds = round(abs($to_time - $from_time));
 
-	if($future){
-		return $this->future($distance_in_minutes,$include_seconds,$distance_in_seconds);
-	}
+        if($future){
+            return $this->future($distance_in_minutes,$include_seconds,$distance_in_seconds);
+        }
 
         if ($distance_in_minutes <= 1){
             if ($include_seconds){
@@ -128,44 +128,44 @@ class TimeAgoExtension extends \Twig_Extension
     }
 
     private function future($distance_in_minutes,$include_seconds,$distance_in_seconds){
-		    if ($distance_in_minutes <= 1){
-			    if ($include_seconds){
-				if ($distance_in_seconds < 5){
-				    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 5));
-				}
-				elseif($distance_in_seconds < 10){
-				    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 10));
-				}
-				elseif($distance_in_seconds < 20){
-				    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 20));
-				}
-				elseif($distance_in_seconds < 40){
-				    return $this->translator->trans('in half a minute');
-				}
-				elseif($distance_in_seconds < 60){
-				    return $this->translator->trans('in less than a minute');
-				}
-				else {
-				    return $this->translator->trans('in 1 minute');
-				}
-			    }
-			    return ($distance_in_minutes===0) ? $this->translator->trans('in less than a minute', array()) : $this->translator->trans('in 1 minute', array());
-			}
-			elseif ($distance_in_minutes <= 45){
-			    return $this->translator->trans('in %minutes minutes', array('%minutes' => $distance_in_minutes));
-			}
-			elseif ($distance_in_minutes <= 90){
-			    return $this->translator->trans('in about 1 hour');
-			}
-			elseif ($distance_in_minutes <= 1440){
-			    return $this->translator->trans('in about %hours hours', array('%hours' => round($distance_in_minutes/60)));
-			}
-			elseif ($distance_in_minutes <= 2880){
-			    return $this->translator->trans('in 1 day');
-			}
-			else{
-			    return $this->translator->trans('in %days days', array('%days' => round($distance_in_minutes/1440)));
-			}
+        if ($distance_in_minutes <= 1){
+            if ($include_seconds){
+                if ($distance_in_seconds < 5){
+                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 5));
+                }
+                elseif($distance_in_seconds < 10){
+                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 10));
+                }
+                elseif($distance_in_seconds < 20){
+                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 20));
+                }
+                elseif($distance_in_seconds < 40){
+                    return $this->translator->trans('in half a minute');
+                }
+                elseif($distance_in_seconds < 60){
+                    return $this->translator->trans('in less than a minute');
+                }
+                else {
+                    return $this->translator->trans('in 1 minute');
+                }
+            }
+            return ($distance_in_minutes===0) ? $this->translator->trans('in less than a minute', array()) : $this->translator->trans('in 1 minute', array());
+        }
+        elseif ($distance_in_minutes <= 45){
+            return $this->translator->trans('in %minutes minutes', array('%minutes' => $distance_in_minutes));
+        }
+        elseif ($distance_in_minutes <= 90){
+            return $this->translator->trans('in about 1 hour');
+        }
+        elseif ($distance_in_minutes <= 1440){
+            return $this->translator->trans('in about %hours hours', array('%hours' => round($distance_in_minutes/60)));
+        }
+        elseif ($distance_in_minutes <= 2880){
+            return $this->translator->trans('in 1 day');
+        }
+        else{
+            return $this->translator->trans('in %days days', array('%days' => round($distance_in_minutes/1440)));
+        }
 
     }
 
