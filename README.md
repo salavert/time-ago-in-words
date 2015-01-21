@@ -4,11 +4,11 @@ This is a Twig extension for Symfony2 Framework where you can easily convert a d
 
 By example
 
-	{{ user.lastLogin|time_ago_in_words }}
-	
-Outputs
+```twig
+{{ user.lastLogin|time_ago_in_words }}
+```
 
-	3 days ago
+Outputs __3 days ago__
 
 # Installation for Symfony2
 
@@ -30,7 +30,7 @@ Now you must let the Service Container know about your newly created Twig Extens
 
 YAML:
 
-```
+```yaml
 # app/config/config.yml
 services:
 	salavert.twig.time_ago:
@@ -42,7 +42,7 @@ services:
 
 XML:
 
-```
+```xml
 # or into your bundle src\Acme\AcmeBundle\Resources\config\services.xml
 <service id="salavert.twig.time_ago" class="Salavert\Twig\Extension\TimeAgoExtension">
 	<tag name="twig.extension" />
