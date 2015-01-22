@@ -18,13 +18,13 @@ Outputs __3 days ago__
 
 ```json
 "require": {
-	"salavert/time-ago-in-words:1.*"
+	"salavert/time-ago-in-words": "1.*"
 }
 ```
 
 or use composer's require command:
 
-	composer require "salavert/time-ago-in-words": "1.*"
+	composer require salavert/time-ago-in-words:1.*
 
 2) Register an Extension as a Service
 
