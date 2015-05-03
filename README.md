@@ -1,4 +1,5 @@
-# Time ago in words Twig extension [![Packagist](https://img.shields.io/packagist/dt/salavert/time-ago-in-words.svg)]() [![Build Status](https://travis-ci.org/salavert/time-ago-in-words.svg?branch=master)](https://travis-ci.org/salavert/time-ago-in-words)
+# Time ago in words Twig extension
+[![Packagist](https://img.shields.io/packagist/dt/salavert/time-ago-in-words.svg)]() [![Build Status](https://travis-ci.org/salavert/time-ago-in-words.svg?branch=master)](https://travis-ci.org/salavert/time-ago-in-words)
 
 This is a Twig extension for Symfony2 Framework where you can easily convert a datetime/timestamp to a distance of time in words.
 
