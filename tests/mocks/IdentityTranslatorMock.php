@@ -1,6 +1,5 @@
 <?php
-
-namespace Salavert\Tests\Mocks
+namespace Salavert\Tests\Mocks;
 
 class IdentityTranslator {
 
