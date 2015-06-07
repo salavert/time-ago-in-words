@@ -16,10 +16,11 @@
         "twig/twig": "~1.12"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "symfony/symfony": "2.*"
     },
     "autoload": {
-        "psr-0": { 
+        "psr-0": {
 			"Salavert": "src/",
 			"Salavert\\Test": "tests/"
 		}
