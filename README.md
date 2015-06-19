@@ -86,7 +86,7 @@ This is a translation to spanish:
 	about %hours hours ago: hace %hours horas
 	1 day ago: hace 1 día
 	%days days ago: hace %days días
-	"{1} 1 month ago |]1,Inf[ %months months ago": 
+	"{1} 1 month ago |]1,Inf[ %months months ago": "{1} hace un mes |]1,Inf[ hace %months meses"
 
 In the same case, for future:
 
