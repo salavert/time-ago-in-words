@@ -8,7 +8,7 @@ use Salavert\Tests\Mocks\IdentityTranslator;
 class TimeAgoExtensionTest extends \PHPUnit_Framework_TestCase {
 	
     public function setUp() {
-        $this->translatorMock = $this->getMock('\IdentityTranslator', array('trans'));
+        $this->translatorMock = $this->getMock('\IdentityTranslator', array('trans', 'transchoice'));
     }
 
     /**
@@ -121,5 +121,39 @@ class TimeAgoExtensionTest extends \PHPUnit_Framework_TestCase {
         $reflection->invokeArgs($extension, array($distance_in_minutes,false,0));
     }
 
+    public function dataProviderYearAgo() {
+        return array(
+            array(new \DateTime('2012-07-08 11:14:15.638276'), new \DateTime('2013-07-08 11:14:15.638276'), false, true),
+            array(new \DateTime('2010-07-08 11:14:15.638276'), new \DateTime('2013-07-08 11:14:15.638276'), false, true)
+            );
+    }
+
+    /** @dataProvider dataProviderYearAgo */
+    public function testFutureDistanceMoreThanYear($from_time, $to_time = null, $include_seconds = false, $include_months = false) {
+        $this->translatorMock->expects($this->once())
+            ->method('transchoice')
+            ->with($this->equalTo('{1} 1 year ago |]1,Inf[ %years years ago'));
+        $extension = new TimeAgoExtension($this->translatorMock);
+        $reflection = self::getMethod('distanceOfTimeInWordsFilter');
+        $reflection->invokeArgs($extension, array($from_time, $to_time, $include_seconds, $include_months));
+
+    }
+
+    public function dataProviderNotYearAgo() {
+        return array(
+            array(new \DateTime('2012-07-08 11:14:15.638276'), new \DateTime('2013-07-08 11:14:15.638276'), false, false),
+            );
+    }
+    
+    /** @dataProvider dataProviderNotYearAgo */
+    public function testFutureDistanceMoreThanYearButDisabled($from_time, $to_time = null, $include_seconds = false, $include_months = false) {
+        $this->translatorMock->expects($this->once())
+            ->method('trans')
+            ->with($this->equalTo('%days days ago'));
+        $extension = new TimeAgoExtension($this->translatorMock);
+        $reflection = self::getMethod('distanceOfTimeInWordsFilter');
+        $reflection->invokeArgs($extension, array($from_time, $to_time, $include_seconds, $include_months));
+
+    }
 
 }
