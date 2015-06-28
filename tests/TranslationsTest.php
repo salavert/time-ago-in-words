@@ -7,6 +7,9 @@ use Symfony\Component\Translation\IdentityTranslator;
 
 class TranslationsTest extends \PHPUnit_Framework_TestCase
 {
+    const DEFAULT_INCLUDE_SECONDS = false;
+    const DEFAULT_INCLUDE_MONTHS = false;
+
     const WITH_INCLUDE_SECONDS = true;
     const WITH_INCLUDE_MONTHS = true;
 
@@ -42,10 +45,21 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedTranslation, $this->extension->distanceOfTimeInWordsFilter($fromTime, $toTime));
     }
 
-    /** @dataProvider dataFromDaysToOneMonth */
-    public function testFromDaysToOneMonth($fromTime, $toTime, $expectedTranslation) {
+    /** @dataProvider dataFromDaysToMonthsWithoutIncludeMonths */
+    public function testFromDaysToMonthsWithoutIncludeMonths($fromTime, $toTime, $expectedTranslation) {
         $this->assertEquals($expectedTranslation, $this->extension->distanceOfTimeInWordsFilter($fromTime, $toTime));
     }
+
+    /** @dataProvider dataFromDaysToMonthsWithIncludeMonths */
+    public function testFromDaysToMonthsWithIncludeMonths($fromTime, $toTime, $expectedTranslation) {
+        $this->assertEquals($expectedTranslation, $this->extension->distanceOfTimeInWordsFilter($fromTime, $toTime, self::DEFAULT_INCLUDE_SECONDS, self::WITH_INCLUDE_MONTHS));
+    }
+
+    /** @dataProvider dataMonthsToOneYear * /
+    public function testMonthsToOneYear($fromTime, $toTime, $expectedTranslation) {
+        $this->assertEquals($expectedTranslation, $this->extension->distanceOfTimeInWordsFilter($fromTime, $toTime));
+    }
+    /**/
 
     public function dataFromSecondsToOneMinuteWithIncludeSeconds() {
         return array(
@@ -92,9 +106,27 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataFromDaysToOneMonth() {
+    public function dataFromDaysToMonthsWithoutIncludeMonths() {
         return array(
-            array("2015-07-01 00:00:00", "2015-07-02 00:00:30", "1 day ago"),
+            array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
+            array("2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"),
+            array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
+            array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
+            array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "31 days ago"),
+            array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "400 days ago"),
+        );
+    }
+
+    public function dataFromDaysToMonthsWithIncludeMonths() {
+        return array(
+            array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
+            array("2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"),
+            array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
+            array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
+            array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "1 month ago"),
+            array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"),
+
+            #array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"),
         );
     }
 }
