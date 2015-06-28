@@ -53,7 +53,7 @@ class TimeAgoExtension extends \Twig_Extension
      *
      * @param $from_time String or DateTime
      * @param $to_time String or DateTime
-     * @param bool $include_seconds
+     * @param bool $include_seconds True to return distance in seconds when it's lower than a minute.
      * @param bool $include_months
      *
      * @return mixed
@@ -111,7 +111,7 @@ class TimeAgoExtension extends \Twig_Extension
                     return $this->translator->trans('1 minute ago');
                 }
             }
-            return ($distance_in_minutes===0) ? $this->translator->trans('less than a minute ago', array()) : $this->translator->trans('1 minute ago', array());
+            return ($distance_in_minutes==0) ? $this->translator->trans('less than a minute ago', array()) : $this->translator->trans('1 minute ago', array());
         }
         elseif ($distance_in_minutes <= 45){
             return $this->translator->trans('%minutes minutes ago', array('%minutes' => $distance_in_minutes));
@@ -133,10 +133,9 @@ class TimeAgoExtension extends \Twig_Extension
             elseif ($distance_in_days < 365) {
                 return $this->translator->transchoice('{1} 1 month ago |]1,Inf[ %months months ago', round($distance_in_days/30), array('%months' => round($distance_in_days/30)));
             }
-             else {
+            else {
                 return $this->translator->transchoice('{1} 1 year ago |]1,Inf[ %years years ago', round($distance_in_days/365), array('%months' => round($distance_in_days/365)));
-
-             }
+            }
         }
     }
 
