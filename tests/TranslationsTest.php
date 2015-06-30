@@ -99,25 +99,25 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
     }
 
 	/**
-	 * @dataProvider dataFromDaysToMonthsWithoutIncludeMonths
+	 * @dataProvider dataFromDaysToOneYearWithoutIncludeMonths
 	 *
 	 * @param $fromTime
 	 * @param $toTime
 	 * @param $expectedTranslation
 	 */
-    public function testFromDaysToMonthsWithoutIncludeMonths($fromTime, $toTime, $expectedTranslation)
+    public function testFromDaysToOneYearWithoutIncludeMonths($fromTime, $toTime, $expectedTranslation)
 	{
         $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation);
     }
 
 	/**
-	 * @dataProvider dataFromDaysToMonthsWithIncludeMonths
+	 * @dataProvider dataFromDaysToOneYearWithIncludeMonths
 	 *
 	 * @param $fromTime
 	 * @param $toTime
 	 * @param $expectedTranslation
 	 */
-    public function testFromDaysToMonthsWithIncludeMonths($fromTime, $toTime, $expectedTranslation)
+    public function testFromDaysToOneYearWithIncludeMonths($fromTime, $toTime, $expectedTranslation)
 	{
         $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation, self::DEFAULT_INCLUDE_SECONDS, self::WITH_INCLUDE_MONTHS);
     }
@@ -177,7 +177,7 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataFromDaysToMonthsWithoutIncludeMonths()
+    public function dataFromDaysToOneYearWithoutIncludeMonths()
 	{
         return array(
             array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
@@ -185,11 +185,18 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
             array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
             array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
             array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "31 days ago"),
+			# Switching from month 11 to 12
+			array("2015-07-01 00:00:00", "2016-6-09 11:59:29", "344 days ago"),
+			array("2015-07-01 00:00:00", "2016-6-09 11:59:30", "345 days ago"),
+			# Reaching a full year
+			array("2015-07-01 00:00:00", "2016-6-29 11:59:29", "364 days ago"),
+			array("2015-07-01 00:00:00", "2016-6-29 11:59:30", "365 days ago"),
+			# Exceeding a year by a month or so
             array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "400 days ago"),
         );
     }
 
-    public function dataFromDaysToMonthsWithIncludeMonths()
+    public function dataFromDaysToOneYearWithIncludeMonths()
 	{
         return array(
             array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
@@ -197,9 +204,15 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
             array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
             array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
             array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "1 month ago"),
+			# Switching from month 11 to 12
+			array("2015-07-01 00:00:00", "2016-6-09 11:59:29", "11 months ago"),
+			array("2015-07-01 00:00:00", "2016-6-09 11:59:30", "1 year ago"), # Instead of 12 months ago
+			# Reaching a full year
+			array("2015-07-01 00:00:00", "2016-6-29 11:59:29", "1 year ago"), # Instead of 12 months ago
+			# Exact moment we round distance of time and reach 365 days
+			array("2015-07-01 00:00:00", "2016-6-29 11:59:30", "1 year ago"),
+			# 400 days
             array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"),
-
-            #array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"),
         );
     }
 }

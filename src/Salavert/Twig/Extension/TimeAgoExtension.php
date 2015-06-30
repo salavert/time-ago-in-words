@@ -132,7 +132,7 @@ class TimeAgoExtension extends \Twig_Extension
             if (!$include_months || $distance_in_days <= 30) {
                 return $this->translator->trans('%days days ago', array('%days' => round($distance_in_days)));
             }
-            elseif ($distance_in_days < 365) {
+            elseif ($distance_in_days < 345) {
                 return $this->translator->transchoice('{1} 1 month ago |]1,Inf[ %months months ago', round($distance_in_days/30), array('%months' => round($distance_in_days/30)));
             }
             else {
