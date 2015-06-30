@@ -2,6 +2,8 @@
 
 namespace Salavert\Twig\Extension;
 
+use Symfony\Component\Translation\IdentityTranslator;
+
 class TimeAgoExtension extends \Twig_Extension
 {
     protected $translator;
