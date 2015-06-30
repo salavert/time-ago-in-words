@@ -136,7 +136,7 @@ class TimeAgoExtension extends \Twig_Extension
                 return $this->translator->transchoice('{1} 1 month ago |]1,Inf[ %months months ago', round($distance_in_days/30), array('%months' => round($distance_in_days/30)));
             }
             else {
-                return $this->translator->transchoice('{1} 1 year ago |]1,Inf[ %years years ago', round($distance_in_days/365), array('%months' => round($distance_in_days/365)));
+                return $this->translator->transchoice('{1} 1 year ago |]1,Inf[ %years years ago', round($distance_in_days/365), array('%years' => round($distance_in_days/365)));
             }
         }
     }
