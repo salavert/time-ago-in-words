@@ -4,21 +4,21 @@ namespace Salavert\Twig\Extension;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer;
-use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class TimeAgoExtension extends \Twig_Extension
 {
     /**
-     * @var IdentityTranslator
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
      * Constructor method
      *
-     * @param IdentityTranslator $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(IdentityTranslator $translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
