@@ -1,7 +1,7 @@
 # Time ago in words Twig extension
 [![Packagist](https://img.shields.io/packagist/dt/salavert/time-ago-in-words.svg)]() [![Build Status](https://travis-ci.org/salavert/time-ago-in-words.svg?branch=master)](https://travis-ci.org/salavert/time-ago-in-words)
 
-This is a Twig extension for Symfony2 Framework where you can easily convert a datetime/timestamp to a distance of time in words.
+This is a Twig extension for Symfony Framework where you can easily convert a datetime/timestamp to a distance of time in words.
 
 By example
 
@@ -11,7 +11,7 @@ By example
 
 Outputs __3 days ago__
 
-# Installation for Symfony2
+# Installation for Symfony
 
 1) Update your composer.json
 
@@ -57,12 +57,12 @@ To display distance of time in words between a date and current date:
 
 	{{ message.created|time_ago_in_words }}
 
-To display distance of time between two custom dates you should use 
+To display distance of time between two custom dates you should use
 
 	{{ message.created|distance_of_time_in_words(message.updated) }}
 
 You also have two available options, for both time_ago_in_words & distance_of_time_in_words filters
-	
+
 - include_seconds (boolean) if you need more detailed seconds approximations if time is less than a minute
 - include_months (boolean) if you want days to be approximated in months if time is greater than 31 days.
 
@@ -87,7 +87,7 @@ This is a translation to spanish:
 	1 day ago: hace 1 día
 	%days days ago: hace %days días
 	"{1} 1 month ago |]1,Inf[ %months months ago": "{1} hace un mes |]1,Inf[ hace %months meses"
-    "{1} 1 year ago |]1,Inf[ %years years ago":  "hace un año |]1,Inf[ Hace %years años" 
+    "{1} 1 year ago |]1,Inf[ %years years ago":  "hace un año |]1,Inf[ Hace %years años"
 
 In the same case, for future:
 
@@ -101,7 +101,7 @@ In the same case, for future:
     in about %hours hours: en %hours horas
     in 1 day: en 1 día
     in %days days: en %days días
-	
+
 # Testing
 
 To launch all tests first make sure dependecies are met with composer and run:
