@@ -7,4 +7,5 @@ install:
   - composer selfupdate
   - composer install
 script: 
-  - ./bin/phpunit
+  - ./vendor/phpunit/phpunit/phpunit
+
