@@ -106,4 +106,4 @@ In the same case, for future:
 
 To launch all tests first make sure dependecies are met with composer and run:
 
-    ./vendor/bin/phpunit
+    ./vendor/phpunit/phpunit/phpunit
