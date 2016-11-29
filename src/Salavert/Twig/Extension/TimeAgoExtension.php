@@ -61,8 +61,8 @@ class TimeAgoExtension extends \Twig_Extension
      * Set include_seconds to true if you want more detailed approximations if distance < 1 minute
      * Set include_months to true if you want approximations in months if days > 30
      *
-     * @param string|\DateTime $from_time
-     * @param string|\DateTime $to_time
+     * @param string|\DateTimeInterface $from_time
+     * @param string|\DateTimeInterface $to_time
      * @param bool             $include_seconds True to return distance in seconds when it's lower than a minute.
      * @param bool             $include_months
      *
@@ -78,7 +78,7 @@ class TimeAgoExtension extends \Twig_Extension
         $timestamp_transformer = new DateTimeToTimestampTransformer();
 
         // Transform “from” to timestamp
-        if ($from_time instanceof \DateTime) {
+        if ($from_time instanceof \DateTimeInterface) {
             $from_time = $timestamp_transformer->transform($from_time);
         } elseif (!is_numeric($from_time)) {
             $from_time = $datetime_transformer->reverseTransform($from_time);
@@ -88,7 +88,7 @@ class TimeAgoExtension extends \Twig_Extension
         $to_time = empty($to_time) ? new \DateTime('now') : $to_time;
 
         // Transform “to” to timestamp
-        if ($to_time instanceof \DateTime) {
+        if ($to_time instanceof \DateTimeInterface) {
             $to_time = $timestamp_transformer->transform($to_time);
         } elseif (!is_numeric($to_time)) {
             $to_time = $datetime_transformer->reverseTransform($to_time);
