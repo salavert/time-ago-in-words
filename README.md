@@ -1,7 +1,7 @@
 # Time ago in words Twig extension
 [![Packagist](https://img.shields.io/packagist/dt/salavert/time-ago-in-words.svg)]() [![Build Status](https://travis-ci.org/salavert/time-ago-in-words.svg?branch=master)](https://travis-ci.org/salavert/time-ago-in-words)
 
-This is a Twig extension for Symfony2 Framework where you can easily convert a datetime/timestamp to a distance of time in words.
+This is a Twig extension for Symfony Framework where you can easily convert a datetime/timestamp to a distance of time in words.
 
 By example
 
@@ -11,7 +11,7 @@ By example
 
 Outputs __3 days ago__
 
-# Installation for Symfony2
+# Installation for Symfony
 
 1) Update your composer.json
 
