@@ -4,10 +4,13 @@ namespace Salavert\Tests;
 
 date_default_timezone_set('Europe/Madrid');
 
+use Twig_SimpleFilter;
 use Salavert\Twig\Extension\TimeAgoExtension;
 use Symfony\Component\Translation\IdentityTranslator;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Constraints\DateTime;
 
-class TranslationsTest extends \PHPUnit_Framework_TestCase
+class TranslationsTest extends TestCase
 {
     const DEFAULT_INCLUDE_SECONDS = false;
     const DEFAULT_INCLUDE_MONTHS = false;
@@ -20,11 +23,26 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
     /** @var TimeAgoExtension */
     private $extension;
 
-    public function setUp() {
+    protected function setUp()
+    {
         $this->extension = new TimeAgoExtension(new IdentityTranslator);
     }
 
-    public function testExtensionName() {
+    public function testGetFilters()
+    {
+        $filters = $this->extension->getFilters();
+
+        $this->assertCount(2, $filters);
+        $this->assertInstanceOf(Twig_SimpleFilter::class, $filters[0]);
+        $this->assertInstanceOf(Twig_SimpleFilter::class, $filters[1]);
+    }
+
+    public function testTimeAgoInWordsFilter()
+    {
+        $this->assertContains('days ago', $this->extension->timeAgoInWordsFilter('2017-04-04 00:00:00'));
+    }
+    public function testExtensionName()
+    {
         $this->assertEquals("time_ago_extension", $this->extension->getName());
     }
 
@@ -124,90 +142,90 @@ class TranslationsTest extends \PHPUnit_Framework_TestCase
 
     public function dataFromSecondsToOneMinuteWithIncludeSeconds()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:04", "less than 5 seconds ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:05", "less than 10 seconds ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:09", "less than 10 seconds ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:10", "less than 20 seconds ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:20", "half a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:39", "half a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:40", "less than a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:59", "less than a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:01:00", "1 minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"),
-        );
+        return [
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:04", "less than 5 seconds ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:05", "less than 10 seconds ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:09", "less than 10 seconds ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:10", "less than 20 seconds ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:20", "half a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:39", "half a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:40", "less than a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:59", "less than a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:01:00", "1 minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"],
+        ];
     }
 
     public function dataFromSecondsToOneMinuteWithoutIncludeSeconds()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:01", "less than a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:29", "less than a minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:00:30", "1 minute ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"),
-        );
+        return [
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:01", "less than a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:29", "less than a minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:00:30", "1 minute ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"],
+        ];
     }
 
     public function dataFromMinutesToAboutOneHour()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-01 00:01:30", "2 minutes ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:02:29", "2 minutes ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:45:29", "45 minutes ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 00:45:30", "about 1 hour ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 01:30:29", "about 1 hour ago"),
-        );
+        return [
+            ["2015-07-01 00:00:00", "2015-07-01 00:01:30", "2 minutes ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:02:29", "2 minutes ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:45:29", "45 minutes ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 00:45:30", "about 1 hour ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 01:30:29", "about 1 hour ago"],
+        ];
     }
 
     public function dataFromHoursToOneDay()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-01 01:30:30", "about 2 hours ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 02:00:29", "about 2 hours ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 02:30:30", "about 3 hours ago"),
-            array("2015-07-01 00:00:00", "2015-07-01 23:30:29", "about 24 hours ago"),
-            array("2015-07-01 00:00:00", "2015-07-02 00:00:29", "about 24 hours ago"),
-            array("2015-07-01 00:00:00", "2015-07-02 00:00:30", "1 day ago"),
-        );
+        return [
+            ["2015-07-01 00:00:00", "2015-07-01 01:30:30", "about 2 hours ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 02:00:29", "about 2 hours ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 02:30:30", "about 3 hours ago"],
+            ["2015-07-01 00:00:00", "2015-07-01 23:30:29", "about 24 hours ago"],
+            ["2015-07-01 00:00:00", "2015-07-02 00:00:29", "about 24 hours ago"],
+            ["2015-07-01 00:00:00", "2015-07-02 00:00:30", "1 day ago"],
+        ];
     }
 
     public function dataFromDaysToOneYearWithoutIncludeMonths()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
-            array("2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"),
-            array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
-            array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
-            array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "31 days ago"),
+        return [
+            ["2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"],
+            ["2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"],
+            ["2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"],
+            ["2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"],
+            ["2015-07-01 00:00:00", "2015-08-01 00:00:00", "31 days ago"],
             # Switching from month 11 to 12
-            array("2015-07-01 00:00:00", "2016-6-09 11:59:29", "344 days ago"),
-            array("2015-07-01 00:00:00", "2016-6-09 11:59:30", "345 days ago"),
+            ["2015-07-01 00:00:00", "2016-6-09 11:59:29", "344 days ago"],
+            ["2015-07-01 00:00:00", "2016-6-09 11:59:30", "345 days ago"],
             # Reaching a full year
-            array("2015-07-01 00:00:00", "2016-6-29 11:59:29", "364 days ago"),
-            array("2015-07-01 00:00:00", "2016-6-29 11:59:30", "365 days ago"),
+            ["2015-07-01 00:00:00", "2016-6-29 11:59:29", "364 days ago"],
+            ["2015-07-01 00:00:00", "2016-6-29 11:59:30", "365 days ago"],
             # Exceeding a year by a month or so
-            array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "400 days ago"),
-        );
+            ["2015-07-01 00:00:00", "2016-8-04 00:00:00", "400 days ago"],
+        ];
     }
 
     public function dataFromDaysToOneYearWithIncludeMonths()
     {
-        return array(
-            array("2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"),
-            array("2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"),
-            array("2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"),
-            array("2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"),
-            array("2015-07-01 00:00:00", "2015-08-01 00:00:00", "1 month ago"),
+        return [
+            ["2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"],
+            ["2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"],
+            ["2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"],
+            ["2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"],
+            ["2015-07-01 00:00:00", "2015-08-01 00:00:00", "1 month ago"],
             # Switching from month 11 to 12
-            array("2015-07-01 00:00:00", "2016-6-09 11:59:29", "11 months ago"),
-            array("2015-07-01 00:00:00", "2016-6-09 11:59:30", "1 year ago"), # Instead of 12 months ago
+            ["2015-07-01 00:00:00", "2016-6-09 11:59:29", "11 months ago"],
+            ["2015-07-01 00:00:00", "2016-6-09 11:59:30", "1 year ago"], # Instead of 12 months ago
             # Reaching a full year
-            array("2015-07-01 00:00:00", "2016-6-29 11:59:29", "1 year ago"), # Instead of 12 months ago
+            ["2015-07-01 00:00:00", "2016-6-29 11:59:29", "1 year ago"], # Instead of 12 months ago
             # Exact moment we round distance of time and reach 365 days
-            array("2015-07-01 00:00:00", "2016-6-29 11:59:30", "1 year ago"),
+            ["2015-07-01 00:00:00", "2016-6-29 11:59:30", "1 year ago"],
             # 400 days
-            array("2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"),
-            array("2015-07-01 00:00:00", "2018-8-04 00:00:00", "3 years ago"),
-        );
+            ["2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"],
+            ["2015-07-01 00:00:00", "2018-8-04 00:00:00", "3 years ago"],
+        ];
     }
 }
