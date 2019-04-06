@@ -28,10 +28,10 @@ class TimeAgoExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('distance_of_time_in_words', array($this, 'distanceOfTimeInWordsFilter')),
-            new \Twig_SimpleFilter('time_ago_in_words', array($this, 'timeAgoInWordsFilter')),
-        );
+        return [
+            new \Twig_SimpleFilter('distance_of_time_in_words', [$this, 'distanceOfTimeInWordsFilter']),
+            new \Twig_SimpleFilter('time_ago_in_words', [$this, 'timeAgoInWordsFilter']),
+        ];
     }
 
     /**
@@ -107,13 +107,13 @@ class TimeAgoExtension extends \Twig_Extension
         if ($distance_in_minutes <= 1) {
             if ($include_seconds) {
                 if ($distance_in_seconds < 5) {
-                    return $this->translator->trans('less than %seconds seconds ago', array('%seconds' => 5));
+                    return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 5]);
                 }
                 if ($distance_in_seconds < 10) {
-                    return $this->translator->trans('less than %seconds seconds ago', array('%seconds' => 10));
+                    return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 10]);
                 }
                 if ($distance_in_seconds < 20) {
-                    return $this->translator->trans('less than %seconds seconds ago', array('%seconds' => 20));
+                    return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 20]);
                 }
                 if ($distance_in_seconds < 40) {
                     return $this->translator->trans('half a minute ago');
@@ -132,7 +132,7 @@ class TimeAgoExtension extends \Twig_Extension
         }
 
         if ($distance_in_minutes <= 45) {
-            return $this->translator->trans('%minutes minutes ago', array('%minutes' => $distance_in_minutes));
+            return $this->translator->trans('%minutes minutes ago', ['%minutes' => $distance_in_minutes]);
         }
 
         if ($distance_in_minutes <= 90) {
@@ -142,7 +142,7 @@ class TimeAgoExtension extends \Twig_Extension
         if ($distance_in_minutes <= 1440) {
             return $this->translator->trans(
                 'about %hours hours ago',
-                array('%hours' => round($distance_in_minutes/60))
+                ['%hours' => round($distance_in_minutes/60)]
             );
         }
 
@@ -153,21 +153,21 @@ class TimeAgoExtension extends \Twig_Extension
         $distance_in_days = round($distance_in_minutes/1440);
 
         if (!$include_months || $distance_in_days <= 30) {
-            return $this->translator->trans('%days days ago', array('%days' => round($distance_in_days)));
+            return $this->translator->trans('%days days ago', ['%days' => round($distance_in_days)]);
         }
 
         if ($distance_in_days < 345) {
             return $this->translator->transchoice(
                 '{1} 1 month ago |]1,Inf[ %months months ago',
                 round($distance_in_days/30),
-                array('%months' => round($distance_in_days/30))
+                ['%months' => round($distance_in_days/30)]
             );
         }
 
         return $this->translator->transchoice(
             '{1} 1 year ago |]1,Inf[ %years years ago',
             round($distance_in_days/365),
-            array('%years' => round($distance_in_days/365))
+            ['%years' => round($distance_in_days/365)]
         );
     }
 
@@ -183,15 +183,15 @@ class TimeAgoExtension extends \Twig_Extension
         if ($distance_in_minutes <= 1) {
             if ($include_seconds) {
                 if ($distance_in_seconds < 5) {
-                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 5));
+                    return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 5]);
                 }
 
                 if ($distance_in_seconds < 10) {
-                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 10));
+                    return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 10]);
                 }
 
                 if ($distance_in_seconds < 20) {
-                    return $this->translator->trans('in less than %seconds seconds', array('%seconds' => 20));
+                    return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 20]);
                 }
 
                 if ($distance_in_seconds < 40) {
@@ -212,7 +212,7 @@ class TimeAgoExtension extends \Twig_Extension
         }
 
         if ($distance_in_minutes <= 45) {
-            return $this->translator->trans('in %minutes minutes', array('%minutes' => $distance_in_minutes));
+            return $this->translator->trans('in %minutes minutes', ['%minutes' => $distance_in_minutes]);
         }
 
         if ($distance_in_minutes <= 90) {
@@ -220,14 +220,14 @@ class TimeAgoExtension extends \Twig_Extension
         }
 
         if ($distance_in_minutes <= 1440) {
-            return $this->translator->trans('in about %hours hours', array('%hours' => round($distance_in_minutes/60)));
+            return $this->translator->trans('in about %hours hours', ['%hours' => round($distance_in_minutes/60)]);
         }
 
         if ($distance_in_minutes <= 2880) {
             return $this->translator->trans('in 1 day');
         }
 
-        return $this->translator->trans('in %days days', array('%days' => round($distance_in_minutes/1440)));
+        return $this->translator->trans('in %days days', ['%days' => round($distance_in_minutes/1440)]);
     }
 
     /**
