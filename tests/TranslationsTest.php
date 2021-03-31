@@ -1,244 +1,230 @@
 <?php
 
-namespace Salavert\Twig\Extension;
+namespace Salavert\Tests;
 
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Extension\AbstractExtension;
+date_default_timezone_set('Europe/Madrid');
+
+use PHPUnit\Framework\TestCase;
+use Salavert\Twig\Extension\TimeAgoExtension;
+use Symfony\Component\Translation\IdentityTranslator;
 use Twig\TwigFilter;
 
-class TimeAgoExtension extends AbstractExtension
+class TranslationsTest extends TestCase
 {
-  /**
-   * @var TranslatorInterface
-   */
-  protected $translator;
+  const DEFAULT_INCLUDE_SECONDS = false;
+  const DEFAULT_INCLUDE_MONTHS = false;
 
-  /**
-   * Constructor method
-   *
-   * @param TranslatorInterface $translator
-   */
-  public function __construct(TranslatorInterface $translator)
+  const WITH_INCLUDE_SECONDS = true;
+  const WITH_INCLUDE_MONTHS = true;
+
+  const DATE_FORMAT = 'Y-m-d H:i:s';
+
+  /** @var TimeAgoExtension */
+  private $extension;
+
+  protected function setUp()
   {
-    $this->translator = $translator;
+    $this->extension = new TimeAgoExtension(new IdentityTranslator);
+  }
+
+  public function testGetFilters()
+  {
+    $filters = $this->extension->getFilters();
+
+    $this->assertCount(2, $filters);
+    $this->assertInstanceOf(TwigFilter::class, $filters[0]);
+    $this->assertInstanceOf(TwigFilter::class, $filters[1]);
+  }
+
+  public function testTimeAgoInWordsFilter()
+  {
+    $this->assertContains('days ago', $this->extension->timeAgoInWordsFilter('2017-04-04 00:00:00'));
+  }
+  public function testExtensionName()
+  {
+    $this->assertEquals("time_ago_extension", $this->extension->getName());
   }
 
   /**
-   * {@inheritdoc}
+   * Launching tests twice: dates as strings and as DateTime objects.
+   * Both arguments are accepted.
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   * @param bool $includeSeconds
+   * @param bool $includeMonths
    */
-  public function getFilters()
+  private function assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation, $includeSeconds=self::DEFAULT_INCLUDE_SECONDS, $includeMonths=self::DEFAULT_INCLUDE_MONTHS)
+  {
+    $fromDateTime = \DateTime::createFromFormat(self::DATE_FORMAT, $fromTime, new \DateTimeZone('GMT'));
+    $toDateTime = \DateTime::createFromFormat(self::DATE_FORMAT, $toTime, new \DateTimeZone('GMT'));
+
+    $translationFromDateStrings = $this->extension->distanceOfTimeInWordsFilter($fromTime, $toTime, $includeSeconds, $includeMonths);
+    $translationFromDateTimes = $this->extension->distanceOfTimeInWordsFilter($fromDateTime, $toDateTime, $includeSeconds, $includeMonths);
+
+    $this->assertEquals($expectedTranslation, $translationFromDateStrings);
+    $this->assertEquals($expectedTranslation, $translationFromDateTimes);
+  }
+
+  /**
+   * @dataProvider dataFromSecondsToOneMinuteWithIncludeSeconds
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromSecondsToOneMinuteWithIncludeSeconds($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation, self::WITH_INCLUDE_SECONDS);
+  }
+
+  /**
+   * @dataProvider dataFromSecondsToOneMinuteWithoutIncludeSeconds
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromSecondsToOneMinuteWithoutIncludeSeconds($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation);
+  }
+
+  /**
+   * @dataProvider dataFromMinutesToAboutOneHour
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromMinutesToAboutOneHour($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation);
+  }
+
+  /**
+   * @dataProvider dataFromHoursToOneDay
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromHoursToOneDay($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation);
+  }
+
+  /**
+   * @dataProvider dataFromDaysToOneYearWithoutIncludeMonths
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromDaysToOneYearWithoutIncludeMonths($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation);
+  }
+
+  /**
+   * @dataProvider dataFromDaysToOneYearWithIncludeMonths
+   *
+   * @param $fromTime
+   * @param $toTime
+   * @param $expectedTranslation
+   */
+  public function testFromDaysToOneYearWithIncludeMonths($fromTime, $toTime, $expectedTranslation)
+  {
+    $this->assertDistanceOfTimeExpectation($fromTime, $toTime, $expectedTranslation, self::DEFAULT_INCLUDE_SECONDS, self::WITH_INCLUDE_MONTHS);
+  }
+
+  public function dataFromSecondsToOneMinuteWithIncludeSeconds()
   {
     return [
-      new TwigFilter('distance_of_time_in_words', [$this, 'distanceOfTimeInWordsFilter']),
-      new TwigFilter('time_ago_in_words', [$this, 'timeAgoInWordsFilter']),
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:04", "less than 5 seconds ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:05", "less than 10 seconds ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:09", "less than 10 seconds ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:10", "less than 20 seconds ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:20", "half a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:39", "half a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:40", "less than a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:59", "less than a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:01:00", "1 minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"],
     ];
   }
 
-  /**
-   * Like distance_of_time_in_words, but where to_time is fixed to timestamp()
-   *
-   * @param $from_time String or DateTime
-   * @param bool $include_seconds
-   * @param bool $include_months
-   *
-   * @return mixed
-   */
-  public function timeAgoInWordsFilter($from_time, $include_seconds = false, $include_months = false)
+  public function dataFromSecondsToOneMinuteWithoutIncludeSeconds()
   {
-    return $this->distanceOfTimeInWordsFilter($from_time, new \DateTime('now'), $include_seconds, $include_months);
+    return [
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:01", "less than a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:29", "less than a minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:00:30", "1 minute ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:01:29", "1 minute ago"],
+    ];
   }
 
-  /**
-   * Reports the approximate distance in time between two times given in seconds
-   * or in a valid ISO string like.
-   * For example, if the distance is 47 minutes, it'll return
-   * "about 1 hour". See the source for the complete wording list.
-   *
-   * Integers are interpreted as seconds. So, by example to check the distance of time between
-   * a created user and their last login:
-   * {{ user.createdAt|distance_of_time_in_words(user.lastLoginAt) }} returns "less than a minute".
-   *
-   * Set include_seconds to true if you want more detailed approximations if distance < 1 minute
-   * Set include_months to true if you want approximations in months if days > 30
-   *
-   * @param string|\DateTimeInterface $from_time
-   * @param string|\DateTimeInterface $to_time
-   * @param bool             $include_seconds True to return distance in seconds when it's lower than a minute.
-   * @param bool             $include_months
-   *
-   * @return string
-   */
-  public function distanceOfTimeInWordsFilter(
-    $from_time,
-    $to_time = null,
-    $include_seconds = false,
-    $include_months = false
-  ) {
-    $datetime_transformer = new DateTimeToStringTransformer(null, null, 'Y-m-d H:i:s');
-    $timestamp_transformer = new DateTimeToTimestampTransformer();
-
-    // Transform “from” to timestamp
-    if ($from_time instanceof \DateTimeInterface) {
-      $from_time = $timestamp_transformer->transform($from_time);
-    } elseif (!is_numeric($from_time)) {
-      $from_time = $datetime_transformer->reverseTransform($from_time);
-      $from_time = $timestamp_transformer->transform($from_time);
-    }
-
-    $to_time = empty($to_time) ? new \DateTime('now') : $to_time;
-
-    // Transform “to” to timestamp
-    if ($to_time instanceof \DateTimeInterface) {
-      $to_time = $timestamp_transformer->transform($to_time);
-    } elseif (!is_numeric($to_time)) {
-      $to_time = $datetime_transformer->reverseTransform($to_time);
-      $to_time = $timestamp_transformer->transform($to_time);
-    }
-
-    $future = ($to_time < $from_time);
-
-    $distance_in_minutes = round((abs($to_time - $from_time))/60);
-    $distance_in_seconds = round(abs($to_time - $from_time));
-
-    if ($future) {
-      return $this->future($distance_in_minutes, $include_seconds, $distance_in_seconds);
-    }
-
-    if ($distance_in_minutes <= 1) {
-      if ($include_seconds) {
-        if ($distance_in_seconds < 5) {
-          return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 5]);
-        }
-        if ($distance_in_seconds < 10) {
-          return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 10]);
-        }
-        if ($distance_in_seconds < 20) {
-          return $this->translator->trans('less than %seconds seconds ago', ['%seconds' => 20]);
-        }
-        if ($distance_in_seconds < 40) {
-          return $this->translator->trans('half a minute ago');
-        }
-        if ($distance_in_seconds < 60) {
-          return $this->translator->trans('less than a minute ago');
-        }
-
-        return $this->translator->trans('1 minute ago');
-      }
-
-      return ($distance_in_minutes == 0)
-        ? $this->translator->trans('less than a minute ago')
-        : $this->translator->trans('1 minute ago')
-        ;
-    }
-
-    if ($distance_in_minutes <= 45) {
-      return $this->translator->trans('%minutes minutes ago', ['%minutes' => $distance_in_minutes]);
-    }
-
-    if ($distance_in_minutes <= 90) {
-      return $this->translator->trans('about 1 hour ago');
-    }
-
-    if ($distance_in_minutes <= 1440) {
-      return $this->translator->trans(
-        'about %hours hours ago',
-        ['%hours' => round($distance_in_minutes/60)]
-      );
-    }
-
-    if ($distance_in_minutes <= 2880) {
-      return $this->translator->trans('1 day ago');
-    }
-
-    $distance_in_days = round($distance_in_minutes/1440);
-
-    if (!$include_months || $distance_in_days <= 30) {
-      return $this->translator->trans('%days days ago', ['%days' => round($distance_in_days)]);
-    }
-
-    if ($distance_in_days < 345) {
-      return $this->translator->transchoice(
-        '{1} 1 month ago |]1,Inf[ %months months ago',
-        round($distance_in_days/30),
-        ['%months' => round($distance_in_days/30)]
-      );
-    }
-
-    return $this->translator->transchoice(
-      '{1} 1 year ago |]1,Inf[ %years years ago',
-      round($distance_in_days/365),
-      ['%years' => round($distance_in_days/365)]
-    );
+  public function dataFromMinutesToAboutOneHour()
+  {
+    return [
+      ["2015-07-01 00:00:00", "2015-07-01 00:01:30", "2 minutes ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:02:29", "2 minutes ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:45:29", "45 minutes ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 00:45:30", "about 1 hour ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 01:30:29", "about 1 hour ago"],
+    ];
   }
 
-  /**
-   * @param int  $distance_in_minutes
-   * @param bool $include_seconds     True to return distance in seconds when it's lower than a minute.
-   * @param bool $include_months
-   *
-   * @return mixed
-   */
-  private function future($distance_in_minutes, $include_seconds, $distance_in_seconds)
+  public function dataFromHoursToOneDay()
   {
-    if ($distance_in_minutes <= 1) {
-      if ($include_seconds) {
-        if ($distance_in_seconds < 5) {
-          return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 5]);
-        }
-
-        if ($distance_in_seconds < 10) {
-          return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 10]);
-        }
-
-        if ($distance_in_seconds < 20) {
-          return $this->translator->trans('in less than %seconds seconds', ['%seconds' => 20]);
-        }
-
-        if ($distance_in_seconds < 40) {
-          return $this->translator->trans('in half a minute');
-        }
-
-        if ($distance_in_seconds < 60) {
-          return $this->translator->trans('in less than a minute');
-        }
-
-        return $this->translator->trans('in 1 minute');
-      }
-
-      return ($distance_in_minutes === 0)
-        ? $this->translator->trans('in less than a minute')
-        : $this->translator->trans('in 1 minute')
-        ;
-    }
-
-    if ($distance_in_minutes <= 45) {
-      return $this->translator->trans('in %minutes minutes', ['%minutes' => $distance_in_minutes]);
-    }
-
-    if ($distance_in_minutes <= 90) {
-      return $this->translator->trans('in about 1 hour');
-    }
-
-    if ($distance_in_minutes <= 1440) {
-      return $this->translator->trans('in about %hours hours', ['%hours' => round($distance_in_minutes/60)]);
-    }
-
-    if ($distance_in_minutes <= 2880) {
-      return $this->translator->trans('in 1 day');
-    }
-
-    return $this->translator->trans('in %days days', ['%days' => round($distance_in_minutes/1440)]);
+    return [
+      ["2015-07-01 00:00:00", "2015-07-01 01:30:30", "about 2 hours ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 02:00:29", "about 2 hours ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 02:30:30", "about 3 hours ago"],
+      ["2015-07-01 00:00:00", "2015-07-01 23:30:29", "about 24 hours ago"],
+      ["2015-07-01 00:00:00", "2015-07-02 00:00:29", "about 24 hours ago"],
+      ["2015-07-01 00:00:00", "2015-07-02 00:00:30", "1 day ago"],
+    ];
   }
 
-  /**
-   * Returns the name of the extension.
-   *
-   * @return string The extension name
-   */
-  public function getName()
+  public function dataFromDaysToOneYearWithoutIncludeMonths()
   {
-    return 'time_ago_extension';
+    return [
+      ["2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"],
+      ["2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"],
+      ["2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"],
+      ["2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"],
+      ["2015-07-01 00:00:00", "2015-08-01 00:00:00", "31 days ago"],
+      # Switching from month 11 to 12
+      ["2015-07-01 00:00:00", "2016-6-09 11:59:29", "344 days ago"],
+      ["2015-07-01 00:00:00", "2016-6-09 11:59:30", "345 days ago"],
+      # Reaching a full year
+      ["2015-07-01 00:00:00", "2016-6-29 11:59:29", "364 days ago"],
+      ["2015-07-01 00:00:00", "2016-6-29 11:59:30", "365 days ago"],
+      # Exceeding a year by a month or so
+      ["2015-07-01 00:00:00", "2016-8-04 00:00:00", "400 days ago"],
+    ];
+  }
+
+  public function dataFromDaysToOneYearWithIncludeMonths()
+  {
+    return [
+      ["2015-07-01 00:00:00", "2015-07-03 00:00:29", "1 day ago"],
+      ["2015-07-01 00:00:00", "2015-07-03 00:00:30", "2 days ago"],
+      ["2015-07-01 00:00:00", "2015-07-16 00:00:29", "15 days ago"],
+      ["2015-07-01 00:00:00", "2015-07-31 00:00:29", "30 days ago"],
+      ["2015-07-01 00:00:00", "2015-08-01 00:00:00", "1 month ago"],
+      # Switching from month 11 to 12
+      ["2015-07-01 00:00:00", "2016-6-09 11:59:29", "11 months ago"],
+      ["2015-07-01 00:00:00", "2016-6-09 11:59:30", "1 year ago"], # Instead of 12 months ago
+      # Reaching a full year
+      ["2015-07-01 00:00:00", "2016-6-29 11:59:29", "1 year ago"], # Instead of 12 months ago
+      # Exact moment we round distance of time and reach 365 days
+      ["2015-07-01 00:00:00", "2016-6-29 11:59:30", "1 year ago"],
+      # 400 days
+      ["2015-07-01 00:00:00", "2016-8-04 00:00:00", "1 year ago"],
+      ["2015-07-01 00:00:00", "2018-8-04 00:00:00", "3 years ago"],
+    ];
   }
 }
