@@ -6,24 +6,30 @@ This is a Twig extension for Symfony Framework where you can easily convert a da
 By example
 
 ```twig
-{{ user.lastLogin|time_ago_in_words }}
+{{ user.lastLogin | time_ago_in_words }}
 ```
 
 Outputs __3 days ago__
 
 # Installation for Symfony
-
 1) Update your composer.json
+    - #### Symfony 2/3 with Twig 1/2
+        ```json
+        "require": {
+            "salavert/time-ago-in-words": "1.*"
+        }
+        ```
 
-```json
-"require": {
-    "salavert/time-ago-in-words": "1.*"
-}
-```
+      or use composer's require command: `composer require salavert/time-ago-in-words:1.*`
 
-or use composer's require command:
+    - #### Symfony 4 with Twig 2/3
+        ```json
+        "require": {
+            "salavert/time-ago-in-words": "2.*"
+        }
+        ```
+      or use composer's require command: `composer require salavert/time-ago-in-words:2.*`
 
-    composer require salavert/time-ago-in-words:1.*
 
 2) Register an Extension as a Service
 
@@ -55,11 +61,11 @@ XML:
 
 To display distance of time in words between a date and current date:
 
-    {{ message.created|time_ago_in_words }}
+    {{ message.created | time_ago_in_words }}
 
 To display distance of time between two custom dates you should use
 
-    {{ message.created|distance_of_time_in_words(message.updated) }}
+    {{ message.created | distance_of_time_in_words(message.updated) }}
 
 You also have two available options, for both time_ago_in_words & distance_of_time_in_words filters
 
@@ -68,11 +74,13 @@ You also have two available options, for both time_ago_in_words & distance_of_ti
 
 Thus, if you want to have the months approximation but not the seconds one, you should use:
 
-    {{ message.created|time_ago_in_words(false, true) }}
+    {{ message.created | time_ago_in_words(false, true) }}
 
 # Translations
 
-Add the following translations to your `\app\Resources\translations\messages.locale.yml`
+Add the following translations to your
+- `\app\Resources\translations\messages.locale.yml` or
+- `\translations\messages.locale.yml`
 
 This is a translation to spanish:
 
